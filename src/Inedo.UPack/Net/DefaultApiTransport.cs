@@ -41,6 +41,7 @@ namespace Inedo.UPack.Net
 
             if (request.RequestBody != null)
             {
+                webRequest.AllowWriteStreamBuffering = false;
                 using (var requestStream = await webRequest.GetRequestStreamAsync().ConfigureAwait(false))
                 {
                     await request.RequestBody.CopyToAsync(requestStream, 81920, cancellationToken).ConfigureAwait(false);
@@ -68,6 +69,8 @@ namespace Inedo.UPack.Net
             url += r.RelativeUrl;
 
             var request = WebRequest.CreateHttp(url);
+            request.KeepAlive = false;
+
             if (r.Endpoint.UseDefaultCredentials)
                 request.UseDefaultCredentials = true;
             else if (!string.IsNullOrEmpty(r.Endpoint.UserName) && r.Endpoint.Password != null)
